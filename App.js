@@ -1,28 +1,42 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, View, FlatList } from 'react-native';
+
+import GoalItem from './components/GoalItem';
+import GoalInput from './components/GoalInput';
 
 export default function App() {
+  const [courseGoals, setCourseGoals] = useState([]);
+
+  function addGoalHandler(enteredGoalText) {
+    setCourseGoals([
+      ...courseGoals,
+      { text: enteredGoalText, key: Math.random().toString() },
+    ]);
+  }
+
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.dummyText}>Another piece of text!</Text>
+    <View style={styles.appContainer}>
+      <GoalInput onAddGoal={addGoalHandler}></GoalInput>
+      <View style={styles.goalsContainer}>
+        <FlatList
+          data={courseGoals}
+          renderItem={(itemData) => {
+            return <GoalItem text={itemData.item.text}></GoalItem>;
+          }}
+          alwaysBounceVertical={false}
+        ></FlatList>
       </View>
-      <Text style={styles.dummyText}>Hello World!</Text>
-      <Button title="Tap me!"></Button>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  appContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 50,
+    paddingHorizontal: 16,
   },
-  dummyText: {
-    margin: 16,
-    borderWidth: 2,
-    borderColor: 'red',
-    padding: 16,
+  goalsContainer: {
+    flex: 5,
   },
 });
